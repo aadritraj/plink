@@ -7,7 +7,6 @@ export const tokens = sqliteTable("tokens", {
 
 export const links = sqliteTable("links", {
 	id: text("id").primaryKey(),
-	shortLink: text("short-link").notNull(),
 	linksTo: text("links-to").notNull(),
 	tokenId: text("token-id")
 		.notNull()
