@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
 	const { error } = Route.useLoaderData();
-	
+
 	const [url, setUrl] = useState("");
 	const [createdLink, setCreatedLink] = useState<{
 		id: string;
