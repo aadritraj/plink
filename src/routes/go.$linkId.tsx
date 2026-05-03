@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Button } from "#/components/button";
 import { getLink } from "#/utils/links.functions";
 
 export const Route = createFileRoute("/go/$linkId")({
@@ -57,22 +58,19 @@ function Redirector() {
 
 				<div className="flex flex-col gap-4">
 					{!cancelled && (
-						<button
-							className="w-full border border-neutral-900 text-sm uppercase tracking-widest p-4 hover:bg-neutral-900 hover:text-white transition-all cursor-pointer"
-							type="button"
+						<Button
+							as="button"
+							className="w-full p-4"
 							onClick={() => setCancelled(true)}
 						>
 							Cancel
-						</button>
+						</Button>
 					)}
 
 					{cancelled && (
-						<a
-							href="/"
-							className="w-full border border-neutral-900 text-sm uppercase tracking-widest p-4 text-center hover:bg-neutral-900 hover:text-white transition-all"
-						>
+						<Button as="link" to="/" className="w-full p-4">
 							Back to Home
-						</a>
+						</Button>
 					)}
 				</div>
 			</main>

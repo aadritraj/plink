@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestHeader } from "@tanstack/react-start/server";
+import type { SubmitEvent } from "react";
 import { useEffect, useState } from "react";
+import { Button } from "#/components/button";
 import { createLinkFn } from "#/utils/links.functions";
 
 const getErrorFromHeader = createServerFn({ method: "GET" }).handler(
@@ -33,7 +35,7 @@ function Home() {
 		setOrigin(window.location.origin);
 	}, []);
 
-	const handleSubmit = async (e: React.FormEvent) => {
+	const handleSubmit = async (e: SubmitEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
 		try {
@@ -88,13 +90,9 @@ function Home() {
 								className="w-full border-b border-neutral-200 py-3 text-lg focus:outline-none focus:border-neutral-900 transition-colors placeholder:text-neutral-300"
 							/>
 						</div>
-						<button
-							type="submit"
-							disabled={isLoading}
-							className="self-start px-8 py-3 border border-neutral-900 text-sm uppercase tracking-widest hover:bg-neutral-900 hover:text-white transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-neutral-900 cursor-pointer"
-						>
-							{isLoading ? "Shortening..." : "Shorten"}
-						</button>
+						<Button type="submit" loading={isLoading} className="self-start">
+							Shorten
+						</Button>
 					</form>
 				</section>
 
@@ -109,18 +107,18 @@ function Home() {
 									<span className="text-lg truncate mr-4 font-medium">
 										{origin}/go/{createdLink.id}
 									</span>
-									<button
-										type="button"
+									<Button
+										as="button"
+										variant="ghost"
 										onClick={() => {
 											navigator.clipboard.writeText(
 												`${origin}/go/${createdLink.id}`,
 											);
 											alert("Copied");
 										}}
-										className="text-xs uppercase tracking-widest hover:underline cursor-pointer"
 									>
 										Copy
-									</button>
+									</Button>
 								</div>
 							</div>
 							<p className="text-[10px] text-neutral-400 uppercase tracking-tighter">
