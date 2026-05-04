@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "#/db";
-import { links } from "#/db/schema";
+import { links, tokens } from "#/db/schema";
 import { generateRandomString, getOrCreateToken } from "#/util";
 
 export const getLinkById = async (
@@ -16,6 +16,23 @@ export const getLinkById = async (
 	} catch (error) {
 		console.error("getLinkById failed", { shortcode, error });
 		throw new Error("Unable to fetch link by id");
+	}
+};
+
+export const getLinksByToken = async (
+	tokenValue: string,
+): Promise<{ id: string; linksTo: string }[]> => {
+	try {
+		const data = await db
+			.select({ id: links.id, linksTo: links.linksTo })
+			.from(links)
+			.innerJoin(tokens, eq(links.tokenId, tokens.id))
+			.where(eq(tokens.value, tokenValue));
+
+		return data;
+	} catch (error) {
+		console.error("getLinksByToken failed", { error });
+		throw new Error("Unable to fetch links for token");
 	}
 };
 

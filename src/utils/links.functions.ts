@@ -1,6 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 
-import { createLink, getLinkById } from "./links.server";
+import { createLink, getLinkById, getLinksByToken } from "./links.server";
+
+export const getLinksFn = createServerFn({ method: "GET" })
+	.inputValidator((data: { token: string }) => data)
+	.handler(async ({ data }) => {
+		return getLinksByToken(data.token);
+	});
 
 export const getLink = createServerFn({ method: "GET" })
 	.inputValidator((data: { id: string }) => data)
