@@ -56,11 +56,18 @@ function Home() {
 
 	return (
 		<div className="min-h-screen bg-white p-6 md:p-12 font-mono text-neutral-900 selection:bg-neutral-200">
-			<header className="mb-20 max-w-2xl">
-				<h1 className="text-4xl font-medium tracking-tight lowercase">plink</h1>
-				<p className="text-sm mt-2 text-neutral-500 uppercase tracking-widest">
-					Minimal link utility
-				</p>
+			<header className="mb-20 max-w-2xl flex items-start justify-between">
+				<div>
+					<h1 className="text-4xl font-medium tracking-tight lowercase">
+						plink
+					</h1>
+					<p className="text-sm mt-2 text-neutral-500 uppercase tracking-widest">
+						Minimal link utility
+					</p>
+				</div>
+				<Button as="link" to="/manage" variant="ghost">
+					Manage
+				</Button>
 			</header>
 
 			<main className="max-w-2xl">

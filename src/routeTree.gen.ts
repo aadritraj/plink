@@ -9,9 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ManageRouteImport } from './routes/manage'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GoLinkIdRouteImport } from './routes/go.$linkId'
 
+const ManageRoute = ManageRouteImport.update({
+  id: '/manage',
+  path: '/manage',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -25,32 +31,43 @@ const GoLinkIdRoute = GoLinkIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/manage': typeof ManageRoute
   '/go/$linkId': typeof GoLinkIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/manage': typeof ManageRoute
   '/go/$linkId': typeof GoLinkIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/manage': typeof ManageRoute
   '/go/$linkId': typeof GoLinkIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/go/$linkId'
+  fullPaths: '/' | '/manage' | '/go/$linkId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/go/$linkId'
-  id: '__root__' | '/' | '/go/$linkId'
+  to: '/' | '/manage' | '/go/$linkId'
+  id: '__root__' | '/' | '/manage' | '/go/$linkId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ManageRoute: typeof ManageRoute
   GoLinkIdRoute: typeof GoLinkIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/manage': {
+      id: '/manage'
+      path: '/manage'
+      fullPath: '/manage'
+      preLoaderRoute: typeof ManageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ManageRoute: ManageRoute,
   GoLinkIdRoute: GoLinkIdRoute,
 }
 export const routeTree = rootRouteImport
