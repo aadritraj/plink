@@ -4,7 +4,8 @@ import { getRequestHeader } from "@tanstack/react-start/server";
 import type { SubmitEvent } from "react";
 import { useEffect, useState } from "react";
 import { Button } from "#/components/button";
-import { createLinkFn } from "#/utils/links.functions";
+import { LinkCard } from "#/components/link-card";
+import { createLinkFn, getLink } from "#/utils/links.functions";
 
 const getErrorFromHeader = createServerFn({ method: "GET" }).handler(
 	async () => {
@@ -27,6 +28,7 @@ function Home() {
 	const [createdLink, setCreatedLink] = useState<{
 		id: string;
 		token: string;
+		linksTo: string;
 	} | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [origin, setOrigin] = useState("");
@@ -43,7 +45,16 @@ function Home() {
 			const result = await createLinkFn({
 				data: { linksTo: url, token: token || undefined },
 			});
-			setCreatedLink(result);
+
+			const linkDetails = await getLink({ data: { id: result.id } });
+
+			if (linkDetails) {
+				setCreatedLink({
+					...result,
+					linksTo: linkDetails.linksTo,
+				});
+			}
+
 			localStorage.setItem("plink-token", result.token);
 			setUrl("");
 		} catch (error) {
@@ -104,34 +115,18 @@ function Home() {
 				</section>
 
 				{createdLink && (
-					<section className="border border-neutral-900 p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+					<section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
 						<h2 className="text-xs uppercase tracking-widest text-neutral-500 mb-6">
 							Result
 						</h2>
-						<div className="flex flex-col gap-6">
-							<div className="flex flex-col gap-2">
-								<div className="flex items-center justify-between border-b border-neutral-200 py-2">
-									<span className="text-lg truncate mr-4 font-medium">
-										{origin}/go/{createdLink.id}
-									</span>
-									<Button
-										as="button"
-										variant="ghost"
-										onClick={() => {
-											navigator.clipboard.writeText(
-												`${origin}/go/${createdLink.id}`,
-											);
-											alert("Copied");
-										}}
-									>
-										Copy
-									</Button>
-								</div>
-							</div>
-							<p className="text-[10px] text-neutral-400 uppercase tracking-tighter">
-								Management token stored locally
-							</p>
-						</div>
+						<LinkCard
+							id={createdLink.id}
+							linksTo={createdLink.linksTo}
+							origin={origin}
+						/>
+						<p className="text-[10px] text-neutral-400 uppercase tracking-tighter mt-6">
+							Management token stored locally
+						</p>
 					</section>
 				)}
 			</main>
