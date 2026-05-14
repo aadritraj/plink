@@ -33,8 +33,8 @@ function Manage() {
 
 	return (
 		<div className="min-h-screen bg-white p-6 md:p-12 font-mono text-neutral-900 selection:bg-neutral-200">
-			<header className="mb-20 max-w-4xl flex items-center justify-between">
-				<div>
+			<header className="mb-20 flex items-center justify-between">
+				<div className="max-w-4xl">
 					<h1 className="text-4xl font-medium tracking-tight lowercase">
 						manage
 					</h1>
