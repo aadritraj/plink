@@ -14,28 +14,20 @@ export const generateRandomString = (length: number = 5): string => {
 	return str;
 };
 
-/*
-    The tokens shown to the user are not the visual value, 
-    but we're using the id (primary key) of the token to query
+export const getTokenId = async (tokenValue: string): Promise<number | null> => {
+	const tokenData = await db
+		.select({ id: tokens.id })
+		.from(tokens)
+		.where(eq(tokens.value, tokenValue));
 
-    This function either:
-    - Returns a new token from the user's visual token value, if it exists in the database
-    - Creates a new token and return it's id
-*/
-export const getOrCreateToken = async (
-	existingToken?: string,
-): Promise<[number, string]> => {
-	if (existingToken) {
-		const tokenData = await db
-			.select({ id: tokens.id })
-			.from(tokens)
-			.where(eq(tokens.value, existingToken));
-
-		if (tokenData.length > 0) {
-			return [tokenData[0].id, existingToken];
-		}
+	if (tokenData.length > 0) {
+		return tokenData[0].id;
 	}
+	
+	return null;
+}
 
+export const createTokenId = async (): Promise<[number, string]> => {
 	const newTokenValue = generateRandomString(20);
 
 	const result = await db
@@ -44,4 +36,5 @@ export const getOrCreateToken = async (
 		.returning({ id: tokens.id });
 
 	return [result[0].id, newTokenValue];
-};
+}
+

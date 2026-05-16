@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "#/db";
 import { links, tokens } from "#/db/schema";
-import { generateRandomString, getOrCreateToken } from "#/util";
+import { createTokenId, generateRandomString, getTokenId } from "#/util";
 
 export const getLinkById = async (
 	shortcode: string,
@@ -46,14 +46,17 @@ export const createLink = async (
 		}
 
 		const randomId = generateRandomString();
-		const [token, tokenValue] = await getOrCreateToken(userToken || undefined);
+
+		const [tokenId, tokenValue] = userToken
+			? await getTokenId(userToken).then(id => (id ? [id, userToken] as [number, string] : createTokenId()))
+			: await createTokenId();
 
 		const data = await db
 			.insert(links)
 			.values({
 				id: randomId,
 				linksTo,
-				tokenId: token,
+				tokenId: tokenId,
 			})
 			.returning({ id: links.id });
 
